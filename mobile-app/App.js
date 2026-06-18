@@ -9,8 +9,8 @@ import { Platform } from 'react-native';
 
 WebBrowser.maybeCompleteAuthSession();
 
-// Use relative URL for web since it's served by the backend, otherwise fallback to IP
-const BACKEND_URL = Platform.OS === 'web' ? '' : 'http://192.168.31.180:4000';
+// Point to the live Render backend
+const BACKEND_URL = 'https://insta2youtube.onrender.com';
 
 export default function App() {
   const { hasShareIntent, shareIntent, resetShareIntent, error: shareError } = useShareIntent();
@@ -102,6 +102,17 @@ export default function App() {
     setErrorMessage('');
   };
 
+  const handleListenOnYouTube = () => {
+    if (!songInfo) return;
+    const query = encodeURIComponent(`${songInfo.title} ${songInfo.artist}`);
+    const url = `https://www.youtube.com/results?search_query=${query}`;
+    if (Platform.OS === 'web') {
+      window.open(url, '_blank');
+    } else {
+      WebBrowser.openBrowserAsync(url);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -173,14 +184,18 @@ export default function App() {
               <Text style={styles.resultSongTitle}>{songInfo.title}</Text>
               <Text style={styles.resultArtist}>{songInfo.artist}</Text>
 
-              <View style={styles.buttonRow}>
-                <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
-                  <Text style={styles.cancelButtonText}>CANCEL</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.primaryButtonHalf} onPress={handleAddToPlaylist}>
-                  <Text style={styles.buttonText}>ADD TO PLAYLIST</Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity style={styles.youtubeButton} onPress={handleListenOnYouTube}>
+                <MaterialCommunityIcons name="youtube" size={20} color="#ffffff" style={{ marginRight: 8 }} />
+                <Text style={styles.buttonTextWhite}>LISTEN ON YOUTUBE</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={[styles.primaryButton, { marginTop: 15 }]} onPress={handleAddToPlaylist}>
+                <Text style={styles.buttonText}>ADD TO PLAYLIST</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.cancelLink} onPress={handleCancel}>
+                <Text style={styles.cancelText}>Cancel & Start Over</Text>
+              </TouchableOpacity>
             </View>
           )}
         </View>
@@ -297,40 +312,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
   },
-  primaryButtonHalf: {
-    backgroundColor: '#1ed760',
+  youtubeButton: {
+    flexDirection: 'row',
+    backgroundColor: '#ff0000',
     paddingVertical: 14,
-    paddingHorizontal: 20,
+    paddingHorizontal: 43,
     borderRadius: 500,
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
-    marginLeft: 10,
+    width: '100%',
+    marginTop: 24,
   },
-  cancelButton: {
-    backgroundColor: 'transparent',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 500,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#4d4d4d',
-    flex: 1,
-    marginRight: 10,
-  },
-  cancelButtonText: {
+  buttonTextWhite: {
     color: '#ffffff',
     fontSize: 14,
     fontWeight: '700',
     textTransform: 'uppercase',
     letterSpacing: 1.4,
   },
-  buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginTop: 24,
+  cancelLink: {
+    marginTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cancelText: {
+    color: '#b3b3b3',
+    fontSize: 14,
+    fontWeight: '600',
+    textDecorationLine: 'underline',
   },
   disabledButton: {
     backgroundColor: '#4d4d4d',
