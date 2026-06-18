@@ -5,8 +5,16 @@ import { useShareIntent } from 'expo-share-intent';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import * as AuthSession from 'expo-auth-session';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import axios from 'axios';
 import { Platform } from 'react-native';
+
+if (Platform.OS !== 'web') {
+  GoogleSignin.configure({
+    webClientId: '218386241996-icajnrark6ga63si8gbtnmdacll310hv.apps.googleusercontent.com',
+    scopes: ['https://www.googleapis.com/auth/youtube'],
+  });
+}
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -22,7 +30,7 @@ export default function App() {
   const [songInfo, setSongInfo] = useState(null);
   const [youtubeToken, setYoutubeToken] = useState(null);
 
-  // Setup Google Auth (You'll need an Expo Client ID from Google Cloud)
+  // Setup Google Auth (Web Fallback)
   const [request, response, promptAsync] = Google.useAuthRequest({
     clientId: '218386241996-icajnrark6ga63si8gbtnmdacll310hv.apps.googleusercontent.com',
     expoClientId: '218386241996-icajnrark6ga63si8gbtnmdacll310hv.apps.googleusercontent.com', 
@@ -32,8 +40,24 @@ export default function App() {
     scopes: ['https://www.googleapis.com/auth/youtube'],
   });
 
+  const handleSignIn = async () => {
+    if (Platform.OS === 'web') {
+      promptAsync();
+    } else {
+      try {
+        await GoogleSignin.hasPlayServices();
+        await GoogleSignin.signIn();
+        const tokens = await GoogleSignin.getTokens();
+        setYoutubeToken(tokens.accessToken);
+      } catch (error) {
+        console.error('Google Sign-In Error:', error);
+        setErrorMessage('Failed to sign in with Google.');
+      }
+    }
+  };
+
   useEffect(() => {
-    if (response?.type === 'success') {
+    if (Platform.OS === 'web' && response?.type === 'success') {
       const { authentication } = response;
       setYoutubeToken(authentication.accessToken);
     }
@@ -137,9 +161,9 @@ export default function App() {
           <Text style={styles.subtitle}>Log in to connect your account and start saving identified tracks.</Text>
           
           <TouchableOpacity 
-            style={[styles.primaryButton, !request && styles.disabledButton]} 
-            disabled={!request}
-            onPress={() => promptAsync()}
+            style={Platform.OS === 'web' && !request ? [styles.primaryButton, styles.disabledButton] : styles.primaryButton} 
+            onPress={handleSignIn}
+            disabled={Platform.OS === 'web' ? !request : false}
           >
             <Text style={styles.buttonText}>LOG IN WITH GOOGLE</Text>
           </TouchableOpacity>
