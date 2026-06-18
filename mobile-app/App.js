@@ -4,6 +4,7 @@ import { MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { useShareIntent } from 'expo-share-intent';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
+import * as AuthSession from 'expo-auth-session';
 import axios from 'axios';
 import { Platform } from 'react-native';
 
@@ -23,9 +24,9 @@ export default function App() {
 
   // Setup Google Auth (You'll need an Expo Client ID from Google Cloud)
   const [request, response, promptAsync] = Google.useAuthRequest({
+    clientId: '218386241996-icajnrark6ga63si8gbtnmdacll310hv.apps.googleusercontent.com',
     expoClientId: '218386241996-icajnrark6ga63si8gbtnmdacll310hv.apps.googleusercontent.com', 
     webClientId: '218386241996-icajnrark6ga63si8gbtnmdacll310hv.apps.googleusercontent.com',
-    redirectUri: Platform.OS === 'web' ? window.location.origin : undefined,
     scopes: ['https://www.googleapis.com/auth/youtube'],
   });
 
