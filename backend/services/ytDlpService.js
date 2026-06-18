@@ -1,11 +1,8 @@
-import { exec } from 'child_process';
+import ytDlp from 'yt-dlp-exec';
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
-import util from 'util';
 import ffmpegPath from 'ffmpeg-static';
-
-const execPromise = util.promisify(exec);
 
 export const extractAudio = async (reelUrl) => {
   try {
@@ -22,14 +19,20 @@ export const extractAudio = async (reelUrl) => {
       fs.writeFileSync(cookiesPath, process.env.INSTAGRAM_COOKIES);
     }
 
-    const cookiesFlag = fs.existsSync(cookiesPath) ? `--cookies "${cookiesPath}"` : '';
+    const flags = {
+      extractAudio: true,
+      audioFormat: 'mp3',
+      ffmpegLocation: ffmpegPath,
+      output: outputPath,
+      noWarnings: true
+    };
 
-    // Using yt-dlp to extract audio with packaged ffmpeg
-    // Prefix with 'npx' so it uses the yt-dlp-exec binary downloaded in node_modules on cloud servers
-    const command = `npx yt-dlp -x --audio-format mp3 ${cookiesFlag} --ffmpeg-location "${ffmpegPath}" -o "${outputPath}" "${reelUrl}"`;
-    
-    console.log(`Executing: ${command}`);
-    await execPromise(command);
+    if (fs.existsSync(cookiesPath)) {
+      flags.cookies = cookiesPath;
+    }
+
+    console.log(`Executing yt-dlp via exec wrapper for: ${reelUrl}`);
+    await ytDlp(reelUrl, flags);
 
     if (fs.existsSync(outputPath)) {
       return outputPath;
@@ -37,7 +40,7 @@ export const extractAudio = async (reelUrl) => {
       throw new Error('Output file not found after yt-dlp execution');
     }
   } catch (error) {
-    console.error('Error in ytDlpService:', error);
+    console.error('Error in ytDlpService:', error.message || error);
     return null;
   }
 };
