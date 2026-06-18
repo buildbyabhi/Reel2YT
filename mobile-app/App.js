@@ -25,7 +25,7 @@ export default function App() {
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId: '218386241996-icajnrark6ga63si8gbtnmdacll310hv.apps.googleusercontent.com', 
     webClientId: '218386241996-icajnrark6ga63si8gbtnmdacll310hv.apps.googleusercontent.com',
-    redirectUri: 'http://localhost:4000',
+    redirectUri: Platform.OS === 'web' ? window.location.origin : undefined,
     scopes: ['https://www.googleapis.com/auth/youtube'],
   });
 
