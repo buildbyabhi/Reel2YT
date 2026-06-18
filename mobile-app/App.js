@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, ActivityIndicator, Alert, SafeAreaView, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, ActivityIndicator, Alert, SafeAreaView, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { useShareIntent } from 'expo-share-intent';
 import * as WebBrowser from 'expo-web-browser';
@@ -116,14 +116,15 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+      <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
+        <View style={styles.header}>
         <MaterialCommunityIcons name="youtube" size={32} color="#FF0000" style={{ marginRight: 10 }} />
         <Text style={styles.title}>Insta2YouTube</Text>
       </View>
 
-      <View style={styles.logoContainer}>
-        <Image source={require('./assets/logo.png')} style={styles.logo} />
-      </View>
+        <View style={styles.logoContainer}>
+          <Image source={require('./assets/logo.png')} style={styles.logo} resizeMode="contain" />
+        </View>
 
       {!youtubeToken ? (
         <View style={styles.authContainer}>
@@ -200,7 +201,8 @@ export default function App() {
             </View>
           )}
         </View>
-      )}
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -209,7 +211,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#121212',
+  },
+  scrollContainer: {
+    flexGrow: 1,
     paddingTop: Platform.OS === 'android' ? 40 : 50,
+    paddingBottom: 40,
   },
   header: {
     flexDirection: 'row',
