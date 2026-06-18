@@ -25,7 +25,8 @@ export const extractAudio = async (reelUrl) => {
     const cookiesFlag = fs.existsSync(cookiesPath) ? `--cookies "${cookiesPath}"` : '';
 
     // Using yt-dlp to extract audio with packaged ffmpeg
-    const command = `yt-dlp -x --audio-format mp3 ${cookiesFlag} --ffmpeg-location "${ffmpegPath}" -o "${outputPath}" "${reelUrl}"`;
+    // Prefix with 'npx' so it uses the yt-dlp-exec binary downloaded in node_modules on cloud servers
+    const command = `npx yt-dlp -x --audio-format mp3 ${cookiesFlag} --ffmpeg-location "${ffmpegPath}" -o "${outputPath}" "${reelUrl}"`;
     
     console.log(`Executing: ${command}`);
     await execPromise(command);
