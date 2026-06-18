@@ -1,0 +1,6 @@
+node_modules/
+.env
+backend/cookies.txt
+mobile-app/dist/
+mobile-app/.expo/
+.DS_Store
