@@ -27,7 +27,8 @@ export default function App() {
     clientId: '218386241996-icajnrark6ga63si8gbtnmdacll310hv.apps.googleusercontent.com',
     expoClientId: '218386241996-icajnrark6ga63si8gbtnmdacll310hv.apps.googleusercontent.com', 
     webClientId: '218386241996-icajnrark6ga63si8gbtnmdacll310hv.apps.googleusercontent.com',
-    redirectUri: AuthSession.makeRedirectUri({ useProxy: true, projectNameForProxy: '@buildbyabhi/mobile-app' }),
+    androidClientId: '218386241996-7h0020i79ioq07egsb1tc1sph8jqjrh5.apps.googleusercontent.com',
+    prompt: 'select_account',
     scopes: ['https://www.googleapis.com/auth/youtube'],
   });
 
