@@ -144,7 +144,18 @@ export const addToPlaylist = async (songData, accessToken, targetPlaylistId) => 
     const videoId = searchResponse.data.items[0].id.videoId;
     console.log(`Found video ID: ${videoId}`);
 
-    // 2. Add video to the playlist
+    // 2. Check if video already exists in the playlist
+    const checkResponse = await youtube.playlistItems.list({
+      part: 'snippet',
+      playlistId: targetPlaylistId,
+      videoId: videoId
+    });
+
+    if (checkResponse.data.items && checkResponse.data.items.length > 0) {
+      throw new Error('This song already exists in the selected playlist!');
+    }
+
+    // 3. Add video to the playlist
     const insertResponse = await youtube.playlistItems.insert({
       part: 'snippet',
       requestBody: {
