@@ -8,6 +8,7 @@ import * as AuthSession from 'expo-auth-session';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import axios from 'axios';
 import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 if (Platform.OS !== 'web') {
   GoogleSignin.configure({
@@ -47,6 +48,21 @@ export default function App() {
     scopes: ['https://www.googleapis.com/auth/youtube'],
   });
 
+  // Load session on startup
+  useEffect(() => {
+    const loadSession = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem('youtubeAccessToken');
+        if (storedToken) {
+          setYoutubeToken(storedToken);
+        }
+      } catch (e) {
+        console.error('Failed to load session', e);
+      }
+    };
+    loadSession();
+  }, []);
+
   const handleSignIn = async () => {
     if (Platform.OS === 'web') {
       promptAsync();
@@ -56,6 +72,7 @@ export default function App() {
         await GoogleSignin.signIn();
         const tokens = await GoogleSignin.getTokens();
         setYoutubeToken(tokens.accessToken);
+        await AsyncStorage.setItem('youtubeAccessToken', tokens.accessToken);
       } catch (error) {
         console.error('Google Sign-In Error:', error);
         setErrorMessage('Failed to sign in with Google.');
@@ -67,8 +84,14 @@ export default function App() {
     if (Platform.OS === 'web' && response?.type === 'success') {
       const { authentication } = response;
       setYoutubeToken(authentication.accessToken);
+      AsyncStorage.setItem('youtubeAccessToken', authentication.accessToken).catch(console.error);
     }
   }, [response]);
+
+  const handleLogout = async () => {
+    setYoutubeToken(null);
+    await AsyncStorage.removeItem('youtubeAccessToken');
+  };
 
   useEffect(() => {
     // If we receive a URL from the native share sheet
@@ -216,9 +239,14 @@ export default function App() {
         </View>
       ) : (
         <View style={styles.appContainer}>
-          <View style={styles.connectedBadge}>
-            <MaterialCommunityIcons name="check-circle" size={16} color="#4CAF50" style={{ marginRight: 5 }} />
-            <Text style={styles.successText}>YouTube Connected</Text>
+          <View style={[styles.connectedBadge, { justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }]}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialCommunityIcons name="check-circle" size={16} color="#4CAF50" style={{ marginRight: 5 }} />
+              <Text style={styles.successText}>YouTube Connected</Text>
+            </View>
+            <TouchableOpacity onPress={handleLogout}>
+              <Text style={{ color: '#FF3B30', fontSize: 14, fontWeight: 'bold' }}>Logout</Text>
+            </TouchableOpacity>
           </View>
           
           <Text style={styles.label}>Paste Instagram Reel URL</Text>
