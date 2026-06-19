@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "mobile-app",
-    "slug": "mobile-app",
+    "name": "Insta2YouTube",
+    "slug": "insta2youtube",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
     "scheme": "instagram-to-youtube",
     "ios": {
@@ -21,7 +21,7 @@
       "package": "com.anonymous.mobileapp"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logo.png"
     },
     "plugins": [
       [

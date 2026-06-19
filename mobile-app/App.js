@@ -212,10 +212,17 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-        <View style={styles.header}>
-        <MaterialCommunityIcons name="youtube" size={32} color="#FF0000" style={{ marginRight: 10 }} />
-        <Text style={styles.title}>Insta2YouTube</Text>
-      </View>
+        <View style={[styles.header, { justifyContent: youtubeToken ? 'space-between' : 'center', paddingHorizontal: 20 }]}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, justifyContent: youtubeToken ? 'flex-start' : 'center' }}>
+            <MaterialCommunityIcons name="youtube" size={32} color="#FF0000" style={{ marginRight: 10 }} />
+            <Text style={styles.title}>Insta2YouTube</Text>
+          </View>
+          {youtubeToken && (
+            <TouchableOpacity onPress={handleLogout} style={{ padding: 8 }}>
+              <Text style={{ color: '#FF3B30', fontSize: 14, fontWeight: 'bold' }}>Logout</Text>
+            </TouchableOpacity>
+          )}
+        </View>
 
         <View style={styles.logoContainer}>
           <Image 
@@ -239,14 +246,9 @@ export default function App() {
         </View>
       ) : (
         <View style={styles.appContainer}>
-          <View style={[styles.connectedBadge, { justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }]}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialCommunityIcons name="check-circle" size={16} color="#4CAF50" style={{ marginRight: 5 }} />
-              <Text style={styles.successText}>YouTube Connected</Text>
-            </View>
-            <TouchableOpacity onPress={handleLogout}>
-              <Text style={{ color: '#FF3B30', fontSize: 14, fontWeight: 'bold' }}>Logout</Text>
-            </TouchableOpacity>
+          <View style={styles.connectedBadge}>
+            <MaterialCommunityIcons name="check-circle" size={16} color="#4CAF50" style={{ marginRight: 5 }} />
+            <Text style={styles.successText}>YouTube Connected</Text>
           </View>
           
           <Text style={styles.label}>Paste Instagram Reel URL</Text>
