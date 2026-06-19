@@ -33,7 +33,7 @@ Insta2YouTube Playlist is a full-stack application that seamlessly bridges the g
 2. Install dependencies: `npm install`
 3. Create a `.env` file with:
    - `GEMINI_API_KEY`: Your Google Gemini API Key
-4. Start the server: `npm start` (Runs on port 3000)
+4. Start the server: `npm start` (Runs on port 4000)
 
 ### Frontend (Web & Mobile)
 1. Navigate to `/mobile-app`: `cd mobile-app`
