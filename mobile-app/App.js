@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, ActivityIndicator, Alert, SafeAreaView, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, ActivityIndicator, Alert, SafeAreaView, TouchableOpacity, Image, ScrollView, Modal, FlatList } from 'react-native';
 import { MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { useShareIntent } from 'expo-share-intent';
 import * as WebBrowser from 'expo-web-browser';
@@ -29,6 +29,13 @@ export default function App() {
   const [errorMessage, setErrorMessage] = useState('');
   const [songInfo, setSongInfo] = useState(null);
   const [youtubeToken, setYoutubeToken] = useState(null);
+
+  // New states for playlist selection
+  const [playlists, setPlaylists] = useState([]);
+  const [showPlaylistModal, setShowPlaylistModal] = useState(false);
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
+  const [creatingNew, setCreatingNew] = useState(false);
+  const [newPlaylistName, setNewPlaylistName] = useState('');
 
   // Setup Google Auth (Web Fallback)
   const [request, response, promptAsync] = Google.useAuthRequest({
@@ -101,23 +108,62 @@ export default function App() {
     }
   };
 
+  const openPlaylistModal = async () => {
+    setShowPlaylistModal(true);
+    setCreatingNew(false);
+    setNewPlaylistName('');
+    setSelectedPlaylistId(null);
+    setLoading(true);
+
+    try {
+      const res = await axios.post(`${BACKEND_URL}/api/playlists`, {
+        youtubeAccessToken: youtubeToken,
+      });
+      if (res.data && res.data.playlists) {
+        setPlaylists(res.data.playlists);
+      }
+    } catch (err) {
+      console.error('Failed to fetch playlists:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleAddToPlaylist = async () => {
     if (!songInfo) return;
+    
+    if (!creatingNew && !selectedPlaylistId) {
+      Alert.alert('Error', 'Please select a playlist or create a new one.');
+      return;
+    }
+
+    if (creatingNew && !newPlaylistName.trim()) {
+      Alert.alert('Error', 'Please enter a name for the new playlist.');
+      return;
+    }
     
     setAdding(true);
     try {
       await axios.post(`${BACKEND_URL}/api/add-to-playlist`, {
         songData: songInfo,
         youtubeAccessToken: youtubeToken,
+        playlistId: creatingNew ? null : selectedPlaylistId,
+        newPlaylistName: creatingNew ? newPlaylistName : null,
       });
 
       Alert.alert('Success', `"${songInfo.title}" was successfully added to your YouTube playlist!`);
+      setShowPlaylistModal(false);
       setSongInfo(null);
       setReelUrl('');
       setErrorMessage('Success! Added to playlist.');
     } catch (err) {
       console.error(err);
-      setErrorMessage('Failed to add to playlist. Check backend logs.');
+      let errorMsg = 'Failed to add to playlist.';
+      if (err.response?.data?.error) {
+        errorMsg += ` Reason: ${err.response.data.error}`;
+      }
+      setErrorMessage(errorMsg);
+      setShowPlaylistModal(false);
     } finally {
       setAdding(false);
     }
@@ -221,7 +267,7 @@ export default function App() {
                 <Text style={styles.buttonTextWhite}>LISTEN ON YOUTUBE</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={[styles.primaryButton, { marginTop: 15 }]} onPress={handleAddToPlaylist}>
+              <TouchableOpacity style={[styles.primaryButton, { marginTop: 15 }]} onPress={openPlaylistModal}>
                 <Text style={styles.buttonText}>ADD TO PLAYLIST</Text>
               </TouchableOpacity>
 
@@ -233,6 +279,85 @@ export default function App() {
         </View>
         )}
       </ScrollView>
+
+      {/* Playlist Selection Modal */}
+      <Modal visible={showPlaylistModal} animationType="slide" transparent={true}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Select Playlist</Text>
+            
+            {!creatingNew ? (
+              <>
+                <FlatList
+                  data={playlists}
+                  keyExtractor={(item) => item.id}
+                  style={styles.playlistList}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity 
+                      style={[styles.playlistItem, selectedPlaylistId === item.id && styles.selectedPlaylistItem]}
+                      onPress={() => setSelectedPlaylistId(item.id)}
+                    >
+                      <MaterialCommunityIcons 
+                        name={selectedPlaylistId === item.id ? "radiobox-marked" : "radiobox-blank"} 
+                        size={24} 
+                        color={selectedPlaylistId === item.id ? "#1ed760" : "#b3b3b3"} 
+                      />
+                      <Text style={styles.playlistItemText}>{item.title}</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+                
+                <TouchableOpacity 
+                  style={styles.createNewOption}
+                  onPress={() => { setCreatingNew(true); setSelectedPlaylistId(null); }}
+                >
+                  <MaterialCommunityIcons name="plus-circle" size={24} color="#1ed760" />
+                  <Text style={styles.createNewText}>Create New Playlist</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <View style={styles.createNewContainer}>
+                <Text style={styles.label}>New Playlist Name</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="E.g., My Chill Beats"
+                    placeholderTextColor="#b3b3b3"
+                    value={newPlaylistName}
+                    onChangeText={setNewPlaylistName}
+                  />
+                </View>
+                <TouchableOpacity style={styles.cancelLink} onPress={() => setCreatingNew(false)}>
+                  <Text style={styles.cancelText}>Back to List</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            <View style={styles.modalActions}>
+              <TouchableOpacity 
+                style={styles.modalCancelBtn} 
+                onPress={() => setShowPlaylistModal(false)}
+                disabled={adding}
+              >
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[styles.modalConfirmBtn, (!selectedPlaylistId && !creatingNew) || (creatingNew && !newPlaylistName) ? styles.disabledButton : {}]} 
+                onPress={handleAddToPlaylist}
+                disabled={(!selectedPlaylistId && !creatingNew) || (creatingNew && !newPlaylistName) || adding}
+              >
+                {adding ? (
+                  <ActivityIndicator color="#000" size="small" />
+                ) : (
+                  <Text style={styles.buttonText}>CONFIRM</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
     </SafeAreaView>
   );
 }
@@ -434,5 +559,85 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#b3b3b3',
     fontWeight: '400',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: '#1f1f1f',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 24,
+    maxHeight: '80%',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#ffffff',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  playlistList: {
+    maxHeight: 250,
+  },
+  playlistItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+  },
+  selectedPlaylistItem: {
+    backgroundColor: '#33333350',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    borderBottomWidth: 0,
+  },
+  playlistItemText: {
+    color: '#ffffff',
+    fontSize: 16,
+    marginLeft: 10,
+  },
+  createNewOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
+    marginTop: 10,
+  },
+  createNewText: {
+    color: '#1ed760',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 10,
+  },
+  createNewContainer: {
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  modalCancelBtn: {
+    flex: 1,
+    padding: 14,
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  modalCancelText: {
+    color: '#b3b3b3',
+    fontSize: 14,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+  },
+  modalConfirmBtn: {
+    flex: 1,
+    backgroundColor: '#1ed760',
+    padding: 14,
+    borderRadius: 500,
+    alignItems: 'center',
   },
 });

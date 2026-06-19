@@ -55,6 +55,68 @@ export const getOrCreatePlaylist = async (accessToken) => {
   }
 };
 
+export const getUserPlaylists = async (accessToken) => {
+  const youtube = google.youtube({
+    version: 'v3',
+    headers: { Authorization: `Bearer ${accessToken}` }
+  });
+
+  try {
+    let allPlaylists = [];
+    let nextPageToken = null;
+    
+    do {
+      const response = await youtube.playlists.list({
+        part: 'snippet',
+        mine: true,
+        maxResults: 50,
+        pageToken: nextPageToken
+      });
+
+      const items = response.data.items || [];
+      const mapped = items.map(p => ({
+        id: p.id,
+        title: p.snippet.title
+      }));
+      
+      allPlaylists = [...allPlaylists, ...mapped];
+      nextPageToken = response.data.nextPageToken;
+    } while (nextPageToken);
+
+    return allPlaylists;
+  } catch (error) {
+    console.error('Error fetching user playlists:', error.message);
+    throw error;
+  }
+};
+
+export const createCustomPlaylist = async (accessToken, title) => {
+  const youtube = google.youtube({
+    version: 'v3',
+    headers: { Authorization: `Bearer ${accessToken}` }
+  });
+
+  try {
+    const createResponse = await youtube.playlists.insert({
+      part: 'snippet,status',
+      requestBody: {
+        snippet: {
+          title: title,
+          description: 'Created via Insta2YouTube App'
+        },
+        status: {
+          privacyStatus: 'private'
+        }
+      }
+    });
+
+    return createResponse.data.id;
+  } catch (error) {
+    console.error('Error creating custom playlist:', error.message);
+    throw error;
+  }
+};
+
 export const addToPlaylist = async (songData, accessToken, targetPlaylistId) => {
   try {
     const youtube = google.youtube({

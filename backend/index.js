@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import identifyReelRoute from './routes/identifyReel.js';
 import addToPlaylistRoute from './routes/addToPlaylist.js';
+import playlistsRoute from './routes/playlists.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,6 +21,7 @@ app.use(express.json());
 // Routes
 app.use('/api/identify-reel', identifyReelRoute);
 app.use('/api/add-to-playlist', addToPlaylistRoute);
+app.use('/api/playlists', playlistsRoute);
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
