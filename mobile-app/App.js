@@ -94,12 +94,14 @@ export default function App() {
   };
 
   useEffect(() => {
+    const rawValue = shareIntent?.webUrl || shareIntent?.text;
+
     // If we receive a URL from the native share sheet
-    if (hasShareIntent && shareIntent.value) {
+    if (hasShareIntent && rawValue) {
       // Extract URL using regex in case Instagram sends extra text
       const urlRegex = /(https?:\/\/[^\s]+)/g;
-      const matches = shareIntent.value.match(urlRegex);
-      const extractedUrl = matches && matches.length > 0 ? matches[0] : shareIntent.value;
+      const matches = rawValue.match(urlRegex);
+      const extractedUrl = matches && matches.length > 0 ? matches[0] : rawValue;
 
       setReelUrl(extractedUrl);
       resetShareIntent();
