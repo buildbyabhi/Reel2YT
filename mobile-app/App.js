@@ -96,13 +96,23 @@ export default function App() {
   useEffect(() => {
     // If we receive a URL from the native share sheet
     if (hasShareIntent && shareIntent.value) {
-      setReelUrl(shareIntent.value);
+      // Extract URL using regex in case Instagram sends extra text
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      const matches = shareIntent.value.match(urlRegex);
+      const extractedUrl = matches && matches.length > 0 ? matches[0] : shareIntent.value;
+
+      setReelUrl(extractedUrl);
       resetShareIntent();
+      
+      // Call handleIdentifyReel immediately with the extracted URL
+      handleIdentifyReel(extractedUrl);
     }
   }, [hasShareIntent, shareIntent]);
 
-  const handleIdentifyReel = async () => {
-    if (!reelUrl) {
+  const handleIdentifyReel = async (optionalUrl) => {
+    const targetUrl = typeof optionalUrl === 'string' ? optionalUrl : reelUrl;
+
+    if (!targetUrl) {
       setErrorMessage('Please enter an Instagram Reel URL');
       return;
     }
@@ -113,7 +123,7 @@ export default function App() {
 
     try {
       const identifyRes = await axios.post(`${BACKEND_URL}/api/identify-reel`, {
-        reelUrl,
+        reelUrl: targetUrl,
       });
 
       if (identifyRes.data && identifyRes.data.song) {
