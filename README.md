@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="./logo.png" width="150" alt="Insta2YouTube Logo"/>
+
 # 🎵 Insta2YouTube: Your Ultimate Reel to Playlist Syncer
 
 [![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](#)
