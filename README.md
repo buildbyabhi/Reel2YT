@@ -1,49 +1,102 @@
-# Insta2YouTube Playlist 🎵🎥
+<div align="center">
 
-Insta2YouTube Playlist is a full-stack application that seamlessly bridges the gap between Instagram Reels and YouTube Music. Whenever you find a catchy song in an Instagram Reel, simply copy the URL and paste it into this app (or use the native Share sheet on Android). The app will automatically identify the song and add it directly to a dedicated playlist on your YouTube account!
+# 🎵 Insta2YouTube Playlist
 
-## ✨ Features
-* **AI-Powered Song Identification**: Uses Google's Gemini 1.5 Flash AI to intelligently identify the track name and artist from an Instagram Reel's caption, hashtags, and visual context.
-* **Seamless YouTube Integration**: Automatically searches YouTube and adds the identified track to a "Insta2YouTube Playlist" on your logged-in YouTube account.
-* **Cross-Platform**: Available as a beautifully designed Web App and a Native Android App.
-* **Native Android Sharing**: Share a Reel directly from the Instagram app to the Insta2YouTube Android app via the native share sheet.
-* **Secure Google Authentication**: Implements standard Google OAuth 2.0 (using official Play Services SDK on Android and Web Auth on browsers) to securely manage your YouTube playlists.
+[![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](#)
+[![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](#)
+[![Gemini API](https://img.shields.io/badge/Gemini_API-8E75B2?style=for-the-badge&logo=googlebard&logoColor=white)](#)
+[![YouTube API](https://img.shields.io/badge/YouTube_API-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](#)
 
-## 🚀 Live Links
-* **Web App (Vercel)**: [https://insta2-you-tube.vercel.app/](https://insta2-you-tube.vercel.app/)
-* **Android App (APK)**: [Download Latest APK](https://expo.dev/accounts/buildbyabhi/projects/mobile-app/builds/a69b0735-9a30-4339-8f96-2ab738a73f17)
-* **Backend API (Render)**: `https://insta2youtube.onrender.com`
+A full-stack cross-platform app that automatically identifies songs from Instagram Reels using AI and adds them directly to your YouTube playlists. 🚀
 
-## 🛠️ Technology Stack
-* **Backend**: Node.js, Express.js
-* **AI Processing**: Google Generative AI (`gemini-1.5-flash`)
-* **Web Scraping**: Puppeteer (to fetch Instagram Reel context)
-* **API Integration**: YouTube Data API v3
-* **Frontend/Mobile**: React Native, Expo, Expo Router
-* **Mobile Authentication**: `@react-native-google-signin/google-signin`
-* **Web Authentication**: `expo-auth-session`
+[**Live Demo**](https://insta2-you-tube.vercel.app/) • [**Report Bug**](https://github.com/buildbyabhi/Insta2YouTube/issues) • [**Request Feature**](https://github.com/buildbyabhi/Insta2YouTube/issues)
 
-## 📂 Project Structure
-* `/backend`: Contains the Express server, Puppeteer scraping logic, Gemini AI processing, and YouTube API calls.
-* `/mobile-app`: Contains the React Native (Expo) code for both the Web application and the Android APK.
+</div>
 
-## ⚙️ Setup & Installation
-### Backend
-1. Navigate to `/backend`: `cd backend`
-2. Install dependencies: `npm install`
-3. Create a `.env` file with:
-   - `GEMINI_API_KEY`: Your Google Gemini API Key
-4. Start the server: `npm start` (Runs on port 4000)
+---
 
-### Frontend (Web & Mobile)
-1. Navigate to `/mobile-app`: `cd mobile-app`
-2. Install dependencies: `npm install`
-3. Run locally: `npx expo start`
-4. **Build for Android**: `npx eas-cli build -p android --profile preview`
+## 🌟 About The Project
 
-## 🔒 Authentication Configuration
-This project uses Google Cloud Console for OAuth.
-- **Web Client ID**: Configured for Vercel and local development.
-- **Android Client ID**: Created and linked to the EAS build's SHA-1 fingerprint (`D6:51...`).
+Ever liked a song on an Instagram Reel but forgot to add it to your playlist? **Insta2YouTube** solves exactly this! By leveraging the power of Google's Gemini AI, this app analyzes shared Reels, identifies the background track, and automatically adds it to your chosen YouTube playlist. 
 
-*Developed with ❤️*
+### ✨ Features
+- **Seamless Integration:** Share an Instagram Reel directly to the app.
+- **AI-Powered Identification:** Uses Gemini AI to accurately identify songs.
+- **YouTube Sync:** Automatically adds the identified song to your YouTube playlist.
+- **Cross-Platform:** Built with React Native to work natively on your mobile device.
+- **Clean UI:** Simple, intuitive, and modern user interface.
+
+---
+
+## 🚀 Getting Started
+
+Follow these steps to set up the project locally on your machine.
+
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn
+- React Native environment setup
+- API Keys: Google Gemini API, YouTube Data API v3
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/buildbyabhi/Insta2YouTube.git
+   cd Insta2YouTube
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. **Set up Environment Variables**
+   Create a `.env` file in the root directory and add your API keys:
+   ```env
+   GEMINI_API_KEY=your_gemini_api_key_here
+   YOUTUBE_API_KEY=your_youtube_api_key_here
+   ```
+
+4. **Run the App**
+   ```bash
+   npm run start
+   ```
+
+---
+
+## 🛠️ Tech Stack
+- **Frontend:** React Native, Expo
+- **Backend/Logic:** Node.js, Express (if applicable)
+- **AI:** Google Gemini API
+- **External Services:** YouTube Data API v3
+
+---
+
+## 🤝 Contributing
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+
+**Don't forget to give the project a star! Thanks again! ⭐**
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📬 Contact
+**Abhishek Kumar**
+- GitHub: [@buildbyabhi](https://github.com/buildbyabhi)
+- Email: buildbyabhi.dev@gmail.com
+- Portfolio: [buildbyabhi.github.io](https://buildbyabhi.github.io/)
+
+---
+<div align="center">
+  <i>Made with ❤️ by Abhishek</i>
+</div>
