@@ -238,7 +238,7 @@ export default function App() {
 
         <View style={styles.logoContainer}>
           <Image 
-            source={{ uri: 'https://raw.githubusercontent.com/buildbyabhi/Insta2YouTube/main/mobile-app/assets/logo.png' }} 
+            source={require('./assets/logo.png')} 
             style={styles.logo} 
             resizeMode="contain" 
           />
