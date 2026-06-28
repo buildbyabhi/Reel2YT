@@ -435,8 +435,6 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#333333',
   },
   authContainer: {
     flex: 1,
