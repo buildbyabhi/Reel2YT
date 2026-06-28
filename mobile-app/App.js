@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 150,
     height: 150,
-    borderRadius: 75,
+    borderRadius: 20,
   },
   authContainer: {
     flex: 1,
