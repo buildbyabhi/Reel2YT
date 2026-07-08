@@ -102,7 +102,7 @@ export const createCustomPlaylist = async (accessToken, title) => {
       requestBody: {
         snippet: {
           title: title,
-          description: 'Created via Insta2YouTube App'
+          description: 'Created via Reel2YT App'
         },
         status: {
           privacyStatus: 'private'

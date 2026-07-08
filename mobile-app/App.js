@@ -20,7 +20,7 @@ if (Platform.OS !== 'web') {
 WebBrowser.maybeCompleteAuthSession();
 
 // Point to the live Render backend
-const BACKEND_URL = 'https://insta2youtube.onrender.com';
+const BACKEND_URL = 'https://Reel2YT.onrender.com';
 
 export default function App() {
   const { hasShareIntent, shareIntent, resetShareIntent, error: shareError } = useShareIntent();
@@ -227,7 +227,7 @@ export default function App() {
         <View style={[styles.header, { justifyContent: youtubeToken ? 'space-between' : 'center', paddingHorizontal: 20 }]}>
           <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, justifyContent: youtubeToken ? 'flex-start' : 'center' }}>
             <MaterialCommunityIcons name="youtube" size={32} color="#FF0000" style={{ marginRight: 10 }} />
-            <Text style={styles.title}>Insta2YouTube</Text>
+            <Text style={styles.title}>Reel2YT</Text>
           </View>
           {youtubeToken && (
             <TouchableOpacity onPress={handleLogout} style={{ padding: 8 }}>

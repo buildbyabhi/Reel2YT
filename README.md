@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="./logo.png" width="150" alt="Insta2YouTube Logo"/>
+<img src="./logo.png" width="150" alt="Reel2YT Logo"/>
 
-# 🎵 Insta2YouTube: Your Ultimate Reel to Playlist Syncer
+# 🎵 Reel2YT: Your Ultimate Reel to Playlist Syncer
 
 [![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](#)
 [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](#)
@@ -11,7 +11,7 @@
 
 A full-stack cross-platform app that automatically identifies songs from Instagram Reels using AI and adds them directly to your YouTube playlists. 🚀
 
-[**Live Demo**](https://insta2-you-tube.vercel.app/) • [**Report Bug**](https://github.com/buildbyabhi/Insta2YouTube/issues) • [**Request Feature**](https://github.com/buildbyabhi/Insta2YouTube/issues)
+[**Live Demo**](https://insta2-you-tube.vercel.app/) • [**Report Bug**](https://github.com/buildbyabhi/Reel2YT/issues) • [**Request Feature**](https://github.com/buildbyabhi/Reel2YT/issues)
 
 </div>
 
@@ -19,7 +19,7 @@ A full-stack cross-platform app that automatically identifies songs from Instagr
 
 ## 🌟 About The Project
 
-Ever liked a song on an Instagram Reel but forgot to add it to your playlist? **Insta2YouTube** solves exactly this! By leveraging the power of Google's Gemini AI, this app analyzes shared Reels, identifies the background track, and automatically adds it to your chosen YouTube playlist. 
+Ever liked a song on an Instagram Reel but forgot to add it to your playlist? **Reel2YT** solves exactly this! By leveraging the power of Google's Gemini AI, this app analyzes shared Reels, identifies the background track, and automatically adds it to your chosen YouTube playlist. 
 
 ### 🏗️ Architecture Flow
 
@@ -63,8 +63,8 @@ Follow these steps to set up the project locally on your machine.
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/buildbyabhi/Insta2YouTube.git
-   cd Insta2YouTube
+   git clone https://github.com/buildbyabhi/Reel2YT.git
+   cd Reel2YT
    ```
 
 2. **Install dependencies**
