@@ -19,7 +19,7 @@ A full-stack cross-platform app that automatically identifies songs from Instagr
 
 ## 🌟 About The Project
 
-Ever liked a song on an Instagram Reel but forgot to add it to your playlist? **Reel2YT** solves exactly this! By leveraging the power of Google's Gemini AI, this app analyzes shared Reels, identifies the background track, and automatically adds it to your chosen YouTube playlist. 
+**Reel2YT** is an app that takes an Instagram Reel URL, extracts the song, lets you listen on YouTube, and easily adds it to your playlist if you like it. 
 
 ### 🏗️ Architecture Flow
 
