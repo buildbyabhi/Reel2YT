@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./logo.png" width="150" alt="Reel2YT Logo"/>
+<img src="./logo-v2.png" width="150" alt="Reel2YT Logo"/>
 
 # 🎵 Reel2YT: Your Ultimate Reel to Playlist Syncer
 
