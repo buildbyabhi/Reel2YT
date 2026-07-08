@@ -21,6 +21,25 @@ A full-stack cross-platform app that automatically identifies songs from Instagr
 
 Ever liked a song on an Instagram Reel but forgot to add it to your playlist? **Insta2YouTube** solves exactly this! By leveraging the power of Google's Gemini AI, this app analyzes shared Reels, identifies the background track, and automatically adds it to your chosen YouTube playlist. 
 
+### 🏗️ Architecture Flow
+
+```mermaid
+graph TD
+    A[📱 User - Mobile App] -->|Share Instagram Reel| B(Background Service)
+    B -->|Extract Media/Context| C{🧠 Gemini AI}
+    C -->|Analyze & Identify Song| D[🎵 Song Metadata]
+    D -->|Search & Auth| E[▶️ YouTube API]
+    E -->|Add to User's Playlist| F[✅ Successfully Synced!]
+    
+    classDef ai fill:#8E75B2,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef app fill:#20232A,stroke:#61DAFB,stroke-width:2px,color:#fff;
+    classDef yt fill:#FF0000,stroke:#fff,stroke-width:2px,color:#fff;
+    
+    class C ai;
+    class A,B app;
+    class E,F yt;
+```
+
 ### ✨ Features
 - **Seamless Integration:** Share an Instagram Reel directly to the app.
 - **AI-Powered Identification:** Uses Gemini AI to accurately identify songs.
